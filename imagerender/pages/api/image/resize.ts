@@ -3,6 +3,7 @@ import fs from "fs";
 import { IncomingForm, Fields, Files, File } from "formidable";
 import sharp from "sharp";
 import { parseImageProcessData } from "../../../utils/image";
+import { Readable } from "stream";
 
 type Data = {
   data: string;
@@ -30,8 +31,7 @@ const asyncParse = (req: NextApiRequest & { [key: string]: any }) =>
 function parseFileToStream(file: File) {
   let path = file["filepath"];
   let buffer = fs.readFileSync(path);
-  console.log(buffer);
-  return buffer
+  return buffer;
 }
 
 export default async function handler(
@@ -40,11 +40,22 @@ export default async function handler(
 ) {
   switch (req.method) {
     case "POST":
-      const { fields, files } = await asyncParse(req);
-      if (!Array.isArray(files.file)) {
-        parseImageProcessData(sharp(parseFileToStream(files.file)), fields) ;
+      try {
+        const { fields, files } = await asyncParse(req);
+        if (!Array.isArray(files.file)) {
+          let sharpItem = sharp(parseFileToStream(files.file));
+           await parseImageProcessData(sharpItem, fields)
+           const buffer =await sharpItem.toBuffer()
+           const stream = Readable.from(buffer);
+           stream.pipe(res)
+          
+        } else {
+          res.status(400).json({ data: "multi file not supported" });
+        }
+      } catch (e) {
+        console.log(e)
+        res.status(500).json({ data: "something gone wrong" });
       }
-      res.status(200).json({ data: "done" });
       break;
     default:
       res.setHeader("Allow", ["GET", "POST"]);

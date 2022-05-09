@@ -27,6 +27,10 @@ export type DetailedSharpenInput = {
   y3?: number;
 };
 
+export type FormatInput = {
+  format: FormatType
+}
+
 export enum FormatType {
   PNG = "png",
   WEBP = "webp",

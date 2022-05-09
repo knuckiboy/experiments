@@ -1,29 +1,35 @@
-import React, { ReactNode, useRef, useState } from "react";
-import Compress from "compress.js";
+import imageCompression from "browser-image-compression";
+import React, { ReactNode, useContext, useRef, useState } from "react";
 import {
   Dimension,
+  FormatInput,
   FormatType,
   ImageInput,
   Rectangle,
   SharpenInput,
 } from "../model/Image.model";
+import Image from "next/image";
 import styles from "../styles/Form.module.css";
-import { dataURItoBlob } from "../utils/image";
-
-const compress = new Compress();
+import { GlobalContext } from "../context/provider";
 
 const Form = () => {
+  const { fileInputState, imageUrlState, formatInputState } =
+    useContext(GlobalContext);
   const [resize, setResizeInput] = useState<InputType>();
   const [sharpenInput, setSharpenInput] = useState<InputType>({ sigma: 30 });
   const [enableSharpen, setEnableSharpen] = useState<boolean>(false);
-  const [fileInput, setFileInput] = useState<File>();
+  // const [fileInput, setFileInput] = useState<File>();
+  // const [imageBlob, setImageBlob] = useState<string>();
   const [cropInput, setCropInput] = useState<InputType>();
-  const [formatInput, setFormatInput] = useState<string>(FormatType.JPEG);
+  // const [formatInput, setFormatInput] = useState<FormatInput>({
+  //   format: FormatType.JPEG,
+  // });
 
   type InputType =
     | Rectangle
     | SharpenInput
     | ImageInput
+    | FormatInput
     | Dimension
     | undefined;
 
@@ -40,48 +46,94 @@ const Form = () => {
     });
   };
 
-  const onEnableSharpen = (e:React.ChangeEvent<HTMLInputElement>)=>{
-    setEnableSharpen(prev => !prev)
-  }
-
-  const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFileInput(e.target.files?.[0]);
+  const onEnableSharpen = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEnableSharpen((prev) => !prev);
   };
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    fileInputState?.[1](e.target.files?.[0]);
+    if (e.target.files?.[0]?.type) {
+      const ext = e.target.files?.[0]?.type.split("/")[1];
+      formatInputState?.[1]({ format: ext as FormatType });
+    }
+  };
+
+  const onSubmit = async (e: React.FormEvent<HTMLElement>) => {
+    await _submitPost(e, true);
+  };
+
+  const _submitPost = async (
+    e: React.FormEvent<HTMLElement>,
+    createLink: boolean
+  ) => {
     e.preventDefault();
     const formData = new FormData();
     if (resize) {
-      formData.append("resize", JSON.stringify(resize));
+      formData.append("resize", convertToString(resize));
     }
     if (enableSharpen && sharpenInput) {
-      formData.append("sharpen", JSON.stringify(sharpenInput));
+      formData.append("sharpen", convertToString(sharpenInput));
     }
     if (cropInput) {
-      formData.append("crop", JSON.stringify(cropInput));
+      formData.append("crop", convertToString(cropInput));
     }
-    if (formatInput) {
-      formData.append("format", JSON.stringify(formatInput));
+    if (formatInputState?.[0]) {
+      formData.append("format", convertToString(formatInputState?.[0]));
     }
-    if (fileInput) {
-      const compressed = await compress.compress([fileInput], {
-        size: 4,
-        quality: 0.8,
+    if (fileInputState?.[0]) {
+      const compressedFile = await imageCompression(fileInputState?.[0], {
+        useWebWorker: true,
       });
-      const {data, ext} = compressed[0]
-      const newFile = dataURItoBlob(data, ext);
-      formData.append("file", newFile);
+      formData.append("file", compressedFile);
     }
-    postData(formData);
+    postData(formData, createLink);
   };
 
-  const postData = (formData: FormData) => {
+  const onPreview = async (e: React.FormEvent<HTMLElement>) => {
+    await _submitPost(e, false);
+  };
+
+  const convertToString = (inputType: InputType | string) => {
+    let stringData = "";
+    if (inputType) {
+      for (let [key, value] of Object.entries(inputType)) {
+        if (key.length !== 0) {
+          stringData += key + ":" + value + ",";
+        }
+      }
+    }
+    return stringData;
+  };
+
+  const postData = (formData: FormData, createLink: boolean) => {
     fetch("api/image/resize", {
       method: "POST",
       body: formData,
     })
-      .then((result) => result.json())
-      .then(console.log);
+      .then((response) => response.blob())
+      .then((blob) => {
+        const newblob = new Blob([blob], {
+          type: `image/${formatInputState?.[0]?.format}`,
+        });
+        const urlString = URL.createObjectURL(newblob);
+        imageUrlState?.[1](urlString);
+        createLink && createDownloadLink(urlString);
+      });
+  };
+
+  const createDownloadLink = (urlString: string) => {
+    let a = document.createElement("a");
+    if (urlString) {
+      console.log(urlString);
+      a.href = urlString;
+    }
+    a.setAttribute(
+      "download",
+      `${crypto.getRandomValues(new Uint32Array(1))}.${
+        formatInputState?.[0]?.format
+      }`
+    );
+    a.click();
   };
 
   const formatItems = Object.values(FormatType);
@@ -96,11 +148,17 @@ const Form = () => {
               type="button"
               id={type}
               name={type}
-              onClick={(e) => setFormatInput(e.currentTarget.name)}
+              onClick={(e) =>
+                formatInputState?.[1]({
+                  format: e.currentTarget.name as FormatType,
+                })
+              }
               className={`${index == 0 ? "rounded-l" : ""} ${
                 index == formatItems.length - 1 ? "rounded-r" : ""
               } ${
-                formatInput === type ? "bg-violet-800" : "bg-violet-400"
+                formatInputState?.[0]?.format === type
+                  ? "bg-violet-800"
+                  : "bg-violet-400"
               } inline-block px-4 py-2  text-white font-medium text-xs leading-tight uppercase hover:bg-violet-700 focus:bg-violet-700 focus:outline-none focus:ring-0 active:bg-violet-800 transition duration-150 ease-in-out`}
             >
               {type}
@@ -114,7 +172,7 @@ const Form = () => {
   return (
     <form onSubmit={onSubmit}>
       <div className="shadow sm:rounded-md sm:overflow-hidden">
-        <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
+        <div className="px-2 py-5 bg-white space-y-6 sm:p-6 m-3">
           <div>
             <label className="block text-sm font-medium text-gray-700">
               {" "}
@@ -259,15 +317,20 @@ const Form = () => {
           </div>
           <div>
             <div className="inline-flex items-center gap-2">
-            <label
-              htmlFor="resize"
-              className="block text-sm font-medium text-gray-700"
+              <label
+                htmlFor="resize"
+                className="block text-sm font-medium text-gray-700"
               >
-              {" "}
-              sharpen
-            </label>
-            <input type="checkbox" className="border-gray-300 rounded h-3 w-3" onChange={onEnableSharpen} checked={enableSharpen} />
-              </div>
+                {" "}
+                sharpen
+              </label>
+              <input
+                type="checkbox"
+                className="border-gray-300 rounded h-3 w-3"
+                onChange={onEnableSharpen}
+                checked={enableSharpen}
+              />
+            </div>
             <div className="mt-1 flex items-center justify-center">
               <input
                 type="range"
@@ -279,7 +342,7 @@ const Form = () => {
                 name="sigma"
                 min={0.3}
                 max={1000}
-                disabled ={!enableSharpen}
+                disabled={!enableSharpen}
                 value={(sharpenInput as SharpenInput).sigma}
                 onChange={(e) => onChange(e, setSharpenInput)}
               />
@@ -306,6 +369,7 @@ const Form = () => {
         <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
           <button
             type="button"
+            onClick={onPreview}
             className="inline-flex justify-center m-1 py-1 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             Preview

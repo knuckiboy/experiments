@@ -1,8 +1,16 @@
 import { Sharp } from "sharp";
-import { Dimension, FormatType, Rectangle } from "../model/Image.model";
+import {
+  Dimension,
+  FormatInput,
+  FormatType,
+  Rectangle,
+} from "../model/Image.model";
 
 const resize = async (sharpItem: Sharp, size: Dimension) => {
-  sharpItem.resize(size.width, size.height);
+  size &&
+    size.width &&
+    size.height &&
+    sharpItem.resize(size.width, size.height);
 };
 
 const crop = async (sharpItem: Sharp, rectangle: Rectangle) => {
@@ -24,13 +32,13 @@ const sharpen = async (sharpItem: Sharp, sigma: number) => {
 const format = async (sharpItem: Sharp, formatType: FormatType) => {
   switch (formatType) {
     case FormatType.PNG:
-      sharpItem.png({ quality: 80, effort: 5, compressionLevel: 4 });
+      sharpItem.png({ quality: 60, effort: 5, compressionLevel: 4 ,force: false});
       break;
     case FormatType.GIF:
       sharpItem.gif();
       break;
     case FormatType.WEBP:
-      sharpItem.webp({ nearLossless: true });
+      sharpItem.webp({lossless:true, quality: 60, alphaQuality: 80, force: false});
       break;
     case FormatType.JPEG:
       sharpItem.jpeg({ mozjpeg: true });
@@ -47,27 +55,39 @@ function dataURItoBlob(dataURI: string, ext: string) {
   return new Blob([new Uint8Array(array)], { type: ext });
 }
 
-function parseImageProcessData(sharpItem: Sharp, fields: Object) {
+function convertStringDataToObject(stringData: string) {
+  let arr = stringData.split(",");
+  let newObj: any = {};
+  arr.forEach((eleStr) => {
+    let objarr = eleStr.split(":");
+    if (objarr[0] !== "") {
+      const parseVal = parseFloat(objarr[1]);
+      newObj[objarr[0]] = Number.isNaN(parseVal) ? objarr[1] : parseVal;
+    }
+  });
+  return newObj;
+}
+
+async function parseImageProcessData(sharpItem: Sharp, fields: Object) {
   for (let [key, value] of Object.entries(fields)) {
-    const valueData = value ?? JSON.parse(value);
+    const object = convertStringDataToObject(value);
     if (key === "sharpen") {
-      // sharpen(image, valueData);
-      console.log("sharp", valueData);
+      console.log("items", object.sigma);
+      await sharpen(sharpItem, object);
     }
     if (key === "format") {
-      // format(image, valueData);
-      console.log("format", valueData);
+      console.log("format", object);
+      await format(sharpItem, (object as FormatInput).format);
     }
     if (key === "resize") {
-      console.log("resize", valueData);
-      // resize(image, valueData);
+      console.log("resize", object);
+      await resize(sharpItem, object);
     }
     if (key === "crop") {
-      console.log("crop", valueData);
-      // crop(image, valueData);
+      console.log("crop", object);
+      await crop(sharpItem, object);
     }
   }
-  // return image;
 }
 
 export { resize, crop, sharpen, format, dataURItoBlob, parseImageProcessData };

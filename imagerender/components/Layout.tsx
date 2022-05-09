@@ -1,11 +1,11 @@
 import Head from "next/head";
 import React from "react";
 
-type LayoutProps = {
+type Props = {
   children: React.ReactNode;
 };
 
-export default function Layout({ children }: LayoutProps) {
+export default function Layout({ children }: Props) {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
       <Head>
