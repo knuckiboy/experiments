@@ -11,10 +11,15 @@ import {
 import Image from "next/image";
 import styles from "../styles/Form.module.css";
 import { GlobalContext } from "../context/provider";
+import { ExclamationCircleIcons } from "./Icons";
 
 const Form = () => {
-  const { fileInputState, imageUrlState, formatInputState } =
-    useContext(GlobalContext);
+  const {
+    fileInputState,
+    imageUrlState,
+    formatInputState,
+    formSubmittedState,
+  } = useContext(GlobalContext);
   const [resize, setResizeInput] = useState<InputType>();
   const [sharpenInput, setSharpenInput] = useState<InputType>({ sigma: 30 });
   const [enableSharpen, setEnableSharpen] = useState<boolean>(false);
@@ -67,6 +72,7 @@ const Form = () => {
     createLink: boolean
   ) => {
     e.preventDefault();
+    formSubmittedState?.[1](true);
     const formData = new FormData();
     if (resize) {
       formData.append("resize", convertToString(resize));
@@ -117,6 +123,7 @@ const Form = () => {
         });
         const urlString = URL.createObjectURL(newblob);
         imageUrlState?.[1](urlString);
+        formSubmittedState?.[1](false);
         createLink && createDownloadLink(urlString);
       });
   };
@@ -216,13 +223,20 @@ const Form = () => {
             </div>
           </div>
           <div>
-            <label
-              htmlFor="resize"
-              className="block text-sm font-medium text-gray-700"
-            >
-              {" "}
-              resize
-            </label>
+            <div className="inline-flex items-center gap-1">
+              <label
+                htmlFor="resize"
+                className="block text-sm font-medium text-gray-700"
+              >
+                {" "}
+                resize
+              </label>
+              <ExclamationCircleIcons
+                size={16}
+                styles={"fill-gray-500 scale-75"}
+                tooltipwithtext="resize width & height"
+              />
+            </div>
             <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
               <div className="mt-1 flex rounded-md">
                 <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
@@ -253,13 +267,20 @@ const Form = () => {
             </div>
           </div>
           <div>
-            <label
-              htmlFor="crop"
-              className="block text-sm font-medium text-gray-700"
-            >
-              {" "}
-              crop
-            </label>
+            <div className="inline-flex items-center gap-1">
+              <label
+                htmlFor="crop"
+                className="block text-sm font-medium text-gray-700"
+              >
+                {" "}
+                crop
+              </label>
+              <ExclamationCircleIcons
+                size={16}
+                styles={"fill-gray-500 scale-75"}
+                tooltipwithtext="crop image size starting from top left hand point"
+              />
+            </div>
             <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
               <div className="mt-1 flex rounded-md">
                 <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
@@ -316,17 +337,22 @@ const Form = () => {
             </div>
           </div>
           <div>
-            <div className="inline-flex items-center gap-2">
+            <div className="inline-flex items-center gap-1">
               <label
-                htmlFor="resize"
+                htmlFor="sharpen"
                 className="block text-sm font-medium text-gray-700"
               >
                 {" "}
                 sharpen
               </label>
+              <ExclamationCircleIcons
+                size={16}
+                styles={"fill-gray-500 scale-75"}
+                tooltipwithtext="select checkbox to toggle image sharpening"
+              />
               <input
                 type="checkbox"
-                className="border-gray-300 rounded h-3 w-3"
+                className="border-gray-300 rounded ml-1 h-3 w-3"
                 onChange={onEnableSharpen}
                 checked={enableSharpen}
               />
@@ -349,13 +375,20 @@ const Form = () => {
             </div>
           </div>
           <div>
-            <label
-              htmlFor="resize"
-              className="block text-sm font-medium text-gray-700"
-            >
-              {" "}
-              format
-            </label>
+            <div className="inline-flex items-center gap-1">
+              <label
+                htmlFor="format"
+                className="block text-sm font-medium text-gray-700"
+              >
+                {" "}
+                format
+              </label>
+              <ExclamationCircleIcons
+                size={16}
+                styles={"fill-gray-500 scale-75"}
+                tooltipwithtext="select format options"
+              />
+            </div>
             <div className="mt-1 flex items-center justify-center">
               <div
                 className="inline-flex shadow-md hover:shadow-lg focus:shadow-lg"
@@ -370,13 +403,15 @@ const Form = () => {
           <button
             type="button"
             onClick={onPreview}
-            className="inline-flex justify-center m-1 py-1 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            disabled={!fileInputState?.[0]}
+            className="inline-flex justify-center m-1 py-1 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             Preview
           </button>
           <button
+            disabled={!fileInputState?.[0]}
             type="submit"
-            className="inline-flex justify-center m-1 py-1 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="inline-flex justify-center m-1 py-1 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             Save
           </button>
