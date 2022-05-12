@@ -14,7 +14,7 @@ export default function Layout({ children }: Props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <header className="flex h-12 w-full items-center justify-between border-b">
-        <div className="container flex justify-center lg:justify-between mx-auto px-1 items-center">
+        <div className="container flex  justify-center lg:justify-between mx-auto px-1 items-center">
           <div className="flex items-center gap-2">
             <ImageIcon size={16}
                 styles={"fill-violet-500 scale-150"}/>
