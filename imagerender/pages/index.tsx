@@ -5,14 +5,14 @@ import sharp from "sharp";
 import Form from "../components/Form";
 import { LoadingIcon } from "../components/Icons";
 import { GlobalContext } from "../context/provider";
-import defaultImage from "../public/image/default-img.jpg";
 import { resize } from "../utils/image";
 
 type ImageProps = {
-  imageBuffer: string;
+  renderedImageBuffer: string;
+  originalImageBuffer: string;
 };
 
-const Home: NextPage<ImageProps> = ({ imageBuffer }: ImageProps) => {
+const Home: NextPage<ImageProps> = ({ renderedImageBuffer, originalImageBuffer}: ImageProps) => {
   const { fileInputState, imageUrlState, formSubmittedState } =
     useContext(GlobalContext);
   return (
@@ -27,7 +27,7 @@ const Home: NextPage<ImageProps> = ({ imageBuffer }: ImageProps) => {
                   src={
                     fileInputState?.[0]
                       ? URL.createObjectURL(fileInputState?.[0])
-                      : defaultImage
+                      : "data:image/png;base64, " + originalImageBuffer
                   }
                   layout="fill"
                   objectFit="contain"
@@ -41,7 +41,7 @@ const Home: NextPage<ImageProps> = ({ imageBuffer }: ImageProps) => {
                 <div className="w-full flex items-center flex-col">
                   <div className={"w-full lg:w-[25vw] h-[70vh] relative"}>
                     <Image
-                      src={"data:image/png;base64, " + imageBuffer}
+                      src={"data:image/png;base64, " + renderedImageBuffer}
                       alt="renderedPic"
                       layout="fill"
                       objectFit="contain"
@@ -87,12 +87,15 @@ const Home: NextPage<ImageProps> = ({ imageBuffer }: ImageProps) => {
 };
 
 export async function getStaticProps() {
+  const originalSharpItem = sharp("public/image/default-img.jpg");
   const sharpItem = sharp("public/image/default-img.jpg");
   resize(sharpItem, { width: 300, height: 300 });
   const info = await sharpItem.toBuffer();
+  const info2 = await originalSharpItem.toBuffer();
   return {
     props: {
-      imageBuffer: info.toString("base64"),
+      renderedImageBuffer: info.toString("base64"),
+      originalImageBuffer: info2.toString("base64"),
     },
   };
 }
