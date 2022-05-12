@@ -1,5 +1,5 @@
 import Head from "next/head";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ImageIcon } from "./Icons";
 
 type Props = {
@@ -7,20 +7,26 @@ type Props = {
 };
 
 export default function Layout({ children }: Props) {
+  
+  const toggleTheme = ()=>{
+    const theme = localStorage.getItem("theme")== null? "light": localStorage.getItem("theme")
+    localStorage.setItem("theme", theme==="dark"?"light":"dark")
+    theme==="dark"?  document.documentElement.classList.add('dark'): document.documentElement.classList.remove('dark')
+  }
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
+    <div className="bg-white dark:bg-slate-800 flex min-h-screen flex-col items-center justify-center text-slate-500 dark:text-slate-400">
       <Head>
         <title>Image Render App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <header className="flex h-12 w-full items-center justify-between border-b">
-        <div className="container flex  justify-center lg:justify-between mx-auto px-1 items-center">
-          <div className="flex items-center gap-2">
-            <ImageIcon size={16} styles={"fill-violet-500 scale-150"} />
+        <div className="container flex justify-center lg:justify-between mx-auto px-1 items-center">
+          <div className="flex items-center gap-2 ">
+            <ImageIcon size={16} styles={"fill-violet-500 dark:fill-violet-300  scale-150"} />
             <h2>Image Render App</h2>
           </div>
           <div className="hidden lg:flex items-center gap-3">
-            <button type="button" className="gap-2 text-xs fill-slate-600 hover:bg-violet-300 px-5 py-2.5 text-center inline-flex items-center rounded-lg">
+            <button type="button" onClick={toggleTheme} className="gap-2 text-xs fill-slate-600 dark:fill-slate-200 hover:bg-violet-300 dark:hover:bg-violet-400 px-5 py-2.5 text-center inline-flex items-center rounded-lg">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"

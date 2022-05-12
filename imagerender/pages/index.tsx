@@ -12,11 +12,13 @@ type ImageProps = {
   originalImageBuffer: string;
 };
 
+
 const Home: NextPage<ImageProps> = ({ renderedImageBuffer, originalImageBuffer}: ImageProps) => {
   const { fileInputState, imageUrlState, formSubmittedState } =
     useContext(GlobalContext);
+
   return (
-    <main className="flex w-full flex-1 flex-col items-center justify-start text-center">
+    <main className="flex w-full flex-1 flex-col items-center justify-start text-center text-slate-500 dark:text-slate-400">
       <div className="flex flex-wrap gap-2 justify-evenly w-[100vw]">
         <div className="my-6 w-full lg:w-8/12 rounded-xl border p-4 text-left hover:text-blue-600 focus:text-blue-600">
           <div className="flex flex-wrap lg:flex-nowrap">
@@ -62,9 +64,9 @@ const Home: NextPage<ImageProps> = ({ renderedImageBuffer, originalImageBuffer}:
                     ) : (
                       <>
                         <div className="mt-1 flex px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md h-full justify-center">
-                          <div className="border-2 border-gray-300 border-dashed rounded-md flex flex-col justify-center items-center px-3 py-4">
-                            <h4 className="text-gray-500 text-center">
-                            {formSubmittedState?.[0]?"click on preview to view image operation":"loading rendered image"}
+                          <div className="border-2 border-gray-300 border-dashed rounded-md flex flex-col items-center px-3 py-4">
+                            <h4 className="text-gray-500 my-auto text-center">
+                            {!formSubmittedState?.[0]?"click on preview to view image operation":"loading rendered image"}
                             </h4>
                             {formSubmittedState?.[0] && <LoadingIcon />}
                           </div>

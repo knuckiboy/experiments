@@ -1,5 +1,5 @@
 import imageCompression from "browser-image-compression";
-import React, { ReactNode, useContext, useRef, useState } from "react";
+import React, { ReactNode, useContext, useState } from "react";
 import {
   Dimension,
   FormatInput,
@@ -8,7 +8,6 @@ import {
   Rectangle,
   SharpenInput,
 } from "../model/Image.model";
-import Image from "next/image";
 import styles from "../styles/Form.module.css";
 import { GlobalContext } from "../context/provider";
 import { ExclamationCircleIcons } from "./Icons";
@@ -178,17 +177,17 @@ const Form = () => {
 
   return (
     <form onSubmit={onSubmit}>
-      <div className="shadow sm:rounded-md sm:overflow-hidden">
-        <div className="px-2 py-5 bg-white space-y-6 sm:p-6 m-3">
+      <div className="bg-white dark:bg-slate-600 shadow sm:rounded-md sm:overflow-hidden text-slate-500 dark:text-violet-400">
+        <div className="px-2 py-5 space-y-6 sm:p-6 m-3">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium">
               {" "}
               Choose photo{" "}
             </label>
             <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
               <div className="space-y-1 text-center">
                 <svg
-                  className="mx-auto h-12 w-12 text-gray-400"
+                  className="mx-auto h-12 w-12"
                   stroke="currentColor"
                   fill="none"
                   viewBox="0 0 48 48"
@@ -201,10 +200,10 @@ const Form = () => {
                     strokeLinejoin="round"
                   />
                 </svg>
-                <div className="flex text-sm text-gray-600">
+                <div className="flex text-sm">
                   <label
                     htmlFor="file-upload"
-                    className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+                    className="relative cursor-pointer rounded-md font-medium text-slate-600 dark:text-slate-400 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
                   >
                     <span>Upload a file</span>
                     <input
@@ -218,7 +217,7 @@ const Form = () => {
                   </label>
                   <p className="pl-1">or drag and drop</p>
                 </div>
-                <p className="text-xs text-gray-500">PNG, JPG, GIF up to 8MB</p>
+                <p className="text-slate-600 dark:text-slate-300 text-xs">PNG, JPG, GIF up to 8MB</p>
               </div>
             </div>
           </div>
@@ -226,20 +225,20 @@ const Form = () => {
             <div className="inline-flex items-center gap-1">
               <label
                 htmlFor="resize"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium"
               >
                 {" "}
                 resize
               </label>
               <ExclamationCircleIcons
                 size={16}
-                styles={"fill-gray-500 scale-75"}
+                styles={"fill-gray-500 dark:fill-gray-300 scale-75"}
                 tooltipwithtext="resize width & height"
               />
             </div>
             <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
               <div className="mt-1 flex rounded-md">
-                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-sm">
                   width:{" "}
                 </span>
                 <input
@@ -252,7 +251,7 @@ const Form = () => {
                 />
               </div>
               <div className="mt-1 flex rounded-md">
-                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-sm">
                   height:{" "}
                 </span>
                 <input
@@ -261,7 +260,7 @@ const Form = () => {
                   id="height"
                   onChange={(e) => onChange(e, setResizeInput)}
                   autoComplete="height"
-                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm text-sm border-gray-300"
+                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm text-sm"
                 />
               </div>
             </div>
@@ -270,20 +269,20 @@ const Form = () => {
             <div className="inline-flex items-center gap-1">
               <label
                 htmlFor="crop"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium"
               >
                 {" "}
                 crop
               </label>
               <ExclamationCircleIcons
                 size={16}
-                styles={"fill-gray-500 scale-75"}
+                styles={"fill-gray-500 dark:fill-gray-300 scale-75"}
                 tooltipwithtext="crop image size starting from top left hand point"
               />
             </div>
             <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
               <div className="mt-1 flex rounded-md">
-                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-sm">
                   width:{" "}
                 </span>
                 <input
@@ -296,7 +295,7 @@ const Form = () => {
                 />
               </div>
               <div className="mt-1 flex rounded-md">
-                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-sm">
                   height:{" "}
                 </span>
                 <input
@@ -309,7 +308,7 @@ const Form = () => {
                 />
               </div>
               <div className="mt-1 flex rounded-md">
-                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50  dark:bg-gray-200 text-sm">
                   left:{" "}
                 </span>
                 <input
@@ -322,7 +321,7 @@ const Form = () => {
                 />
               </div>
               <div className="mt-1 flex rounded-md">
-                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
+                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-sm">
                   top:{" "}
                 </span>
                 <input
@@ -340,14 +339,14 @@ const Form = () => {
             <div className="inline-flex items-center gap-1">
               <label
                 htmlFor="sharpen"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium"
               >
                 {" "}
                 sharpen
               </label>
               <ExclamationCircleIcons
                 size={16}
-                styles={"fill-gray-500 scale-75"}
+                styles={"fill-gray-500 dark:fill-gray-300 scale-75"}
                 tooltipwithtext="select checkbox to toggle image sharpening"
               />
               <input
@@ -378,14 +377,14 @@ const Form = () => {
             <div className="inline-flex items-center gap-1">
               <label
                 htmlFor="format"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium"
               >
                 {" "}
                 format
               </label>
               <ExclamationCircleIcons
                 size={16}
-                styles={"fill-gray-500 scale-75"}
+                styles={"fill-gray-500 dark:fill-gray-300 scale-75"}
                 tooltipwithtext="select format options"
               />
             </div>
@@ -399,7 +398,7 @@ const Form = () => {
             </div>
           </div>
         </div>
-        <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
+        <div className="px-4 py-3 dark:bg-slate-700 text-right sm:px-6">
           <button
             type="button"
             onClick={onPreview}
