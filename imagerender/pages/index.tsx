@@ -63,7 +63,7 @@ const Home: NextPage<ImageProps> = ({ imageBuffer }: ImageProps) => {
                         <div className="mt-1 flex px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md h-full justify-center">
                           <div className="border-2 border-gray-300 border-dashed rounded-md flex flex-col justify-center items-center px-3 py-4">
                             <h4 className="text-gray-500 text-center">
-                              click on preview to view image operation{" "}
+                            {formSubmittedState?.[0]?"click on preview to view image operation":"loading rendered image"}
                             </h4>
                             {formSubmittedState?.[0] && <LoadingIcon />}
                           </div>
