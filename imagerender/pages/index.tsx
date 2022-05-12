@@ -31,6 +31,7 @@ const Home: NextPage<ImageProps> = ({ imageBuffer }: ImageProps) => {
                   }
                   layout="fill"
                   objectFit="contain"
+                  priority
                 />
               </div>
               <h5>original</h5>
