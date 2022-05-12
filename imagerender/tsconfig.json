@@ -19,14 +19,14 @@
     "incremental": true,
     "declaration": true,
     "declarationMap": true,
-    "noEmit": false,
-    "emitDeclarationOnly": true,
     "traceResolution": true,
+    "noEmit": true
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx","image.d.ts"
+    "**/*.tsx",
+    "image.d.ts"
   ],
   "exclude": [
     "node_modules"
