@@ -36,4 +36,5 @@ export enum FormatType {
   WEBP = "webp",
   JPEG = "jpeg",
   GIF = "gif",
+  ICO = "ico",
 }

@@ -86,9 +86,7 @@ const Form = () => {
       formData.append("format", convertToString(formatInputState?.[0]));
     }
     if (fileInputState?.[0]) {
-      const compressedFile = await imageCompression(fileInputState?.[0], {
-        useWebWorker: true,
-      });
+      const compressedFile = await createImageCompression(fileInputState?.[0]);
       formData.append("file", compressedFile);
     }
     postData(formData, createLink);
@@ -116,15 +114,23 @@ const Form = () => {
       body: formData,
     })
       .then((response) => response.blob())
-      .then((blob) => {
-        const newblob = new Blob([blob], {
-          type: `image/${formatInputState?.[0]?.format}`,
-        });
-        const urlString = URL.createObjectURL(newblob);
+      .then(async (blob) => {
+        const newblob = new File([blob], 
+          `test/${formatInputState?.[0]?.format}`,
+          {type:`image/${formatInputState?.[0]?.format}`, lastModified:new Date().getTime()}
+        );
+        const compressed = await createImageCompression(newblob)
+        const urlString = URL.createObjectURL(compressed);
         imageUrlState?.[1](urlString);
         formSubmittedState?.[1](false);
         createLink && createDownloadLink(urlString);
       });
+  };
+
+  const createImageCompression = async (file: File): Promise<File> => {
+    return await imageCompression(file, {
+      useWebWorker: true,
+    });
   };
 
   const createDownloadLink = (urlString: string) => {
@@ -180,10 +186,7 @@ const Form = () => {
       <div className="bg-white dark:bg-slate-600 shadow sm:rounded-md sm:overflow-hidden text-slate-500 dark:text-violet-400">
         <div className="px-2 py-5 space-y-6 sm:p-6 m-3">
           <div>
-            <label className="block text-sm font-medium">
-              {" "}
-              Choose photo{" "}
-            </label>
+            <label className="block text-sm font-medium"> Choose photo </label>
             <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
               <div className="space-y-1 text-center">
                 <svg
@@ -217,16 +220,15 @@ const Form = () => {
                   </label>
                   <p className="pl-1">or drag and drop</p>
                 </div>
-                <p className="text-slate-600 dark:text-slate-300 text-xs">PNG, JPG, GIF up to 8MB</p>
+                <p className="text-slate-600 dark:text-slate-300 text-xs">
+                  PNG, JPG, GIF up to 8MB
+                </p>
               </div>
             </div>
           </div>
           <div>
             <div className="inline-flex items-center gap-1">
-              <label
-                htmlFor="resize"
-                className="block text-sm font-medium"
-              >
+              <label htmlFor="resize" className="block text-sm font-medium">
                 {" "}
                 resize
               </label>
@@ -267,10 +269,7 @@ const Form = () => {
           </div>
           <div>
             <div className="inline-flex items-center gap-1">
-              <label
-                htmlFor="crop"
-                className="block text-sm font-medium"
-              >
+              <label htmlFor="crop" className="block text-sm font-medium">
                 {" "}
                 crop
               </label>
@@ -337,10 +336,7 @@ const Form = () => {
           </div>
           <div>
             <div className="inline-flex items-center gap-1">
-              <label
-                htmlFor="sharpen"
-                className="block text-sm font-medium"
-              >
+              <label htmlFor="sharpen" className="block text-sm font-medium">
                 {" "}
                 sharpen
               </label>
@@ -375,10 +371,7 @@ const Form = () => {
           </div>
           <div>
             <div className="inline-flex items-center gap-1">
-              <label
-                htmlFor="format"
-                className="block text-sm font-medium"
-              >
+              <label htmlFor="format" className="block text-sm font-medium">
                 {" "}
                 format
               </label>

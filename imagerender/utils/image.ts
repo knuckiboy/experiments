@@ -34,14 +34,18 @@ const format = async (sharpItem: Sharp, formatType: FormatType) => {
     case FormatType.PNG:
       sharpItem.png({ quality: 60, effort: 5, compressionLevel: 4 ,force: false});
       break;
+      case FormatType.ICO:
+        sharpItem.resize(128,128)
+        sharpItem.png({ quality: 60, effort: 5, compressionLevel: 4 ,force: true});
+        break;
     case FormatType.GIF:
-      sharpItem.gif();
+      sharpItem.gif({effort: 5});
       break;
     case FormatType.WEBP:
       sharpItem.webp({lossless:true, quality: 60, alphaQuality: 80, force: false});
       break;
     case FormatType.JPEG:
-      sharpItem.jpeg({ mozjpeg: true });
+      sharpItem.jpeg({ quality: 60, progressive:true, mozjpeg:true});
       break;
   }
 };
@@ -55,7 +59,7 @@ function dataURItoBlob(dataURI: string, ext: string) {
   return new Blob([new Uint8Array(array)], { type: ext });
 }
 
-function convertStringDataToObject(stringData: string) {
+export function convertStringDataToObject(stringData: string) {
   let arr = stringData.split(",");
   let newObj: any = {};
   arr.forEach((eleStr) => {
