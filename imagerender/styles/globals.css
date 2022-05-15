@@ -12,3 +12,15 @@
 .open {
   transform: translateY(5px) rotate(-180deg);
 }
+
+@layer base {
+  body {
+    @apply text-body;
+  }
+
+  @screen lg { // applying font size for lg breakpoint
+    body {
+      @apply text-body-lg;
+    }
+  }
+}

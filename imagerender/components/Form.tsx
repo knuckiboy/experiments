@@ -230,7 +230,7 @@ const Form = () => {
       <div className="bg-white dark:bg-slate-600 shadow sm:rounded-md sm:overflow-hidden text-slate-500 dark:text-violet-400">
         <div className="px-2 py-5 space-y-6 sm:p-6 m-3">
           <div>
-            <label className="block text-sm font-medium"> Choose photo </label>
+            <label className="block font-medium"> Choose photo </label>
             <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
               <div className="space-y-1 text-center">
                 <svg
@@ -272,7 +272,7 @@ const Form = () => {
           </div>
           <div>
             <div className="inline-flex items-center gap-1">
-              <label htmlFor="resize" className="block text-sm font-medium">
+              <label htmlFor="resize" className="block font-medium">
                 {" "}
                 resize
               </label>
@@ -282,9 +282,9 @@ const Form = () => {
                 tooltipwithtext="resize width & height"
               />
             </div>
-            <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-3">
               <div className="mt-1 flex">
-                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-xs">
+                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200">
                   width:{" "}
                 </span>
                 <input
@@ -293,11 +293,11 @@ const Form = () => {
                   id="width"
                   onChange={(e) => onChange(e, setResizeInput)}
                   autoComplete="width"
-                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm text-xs border-gray-300"
+                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-smborder-gray-300"
                 />
               </div>
               <div className="mt-1 flex">
-                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-xs">
+                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200">
                   height:{" "}
                 </span>
                 <input
@@ -306,14 +306,14 @@ const Form = () => {
                   id="height"
                   onChange={(e) => onChange(e, setResizeInput)}
                   autoComplete="height"
-                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm text-xs"
+                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm"
                 />
               </div>
             </div>
           </div>
           <div>
             <div className="inline-flex items-center gap-1">
-              <label htmlFor="crop" className="block text-sm font-medium">
+              <label htmlFor="crop" className="block font-medium">
                 {" "}
                 crop
               </label>
@@ -323,9 +323,9 @@ const Form = () => {
                 tooltipwithtext="crop image size starting from top left hand point"
               />
             </div>
-            <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-3">
               <div className="mt-1 flex">
-                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-xs">
+                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 ">
                   width:{" "}
                 </span>
                 <input
@@ -334,11 +334,11 @@ const Form = () => {
                   id="width"
                   onChange={(e) => onChange(e, setCropInput)}
                   autoComplete="width"
-                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm text-xs border-gray-300"
+                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm border-gray-300"
                 />
               </div>
               <div className="mt-1 flex">
-                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-xs">
+                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200">
                   height:{" "}
                 </span>
                 <input
@@ -347,11 +347,11 @@ const Form = () => {
                   id="height"
                   onChange={(e) => onChange(e, setCropInput)}
                   autoComplete="height"
-                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm text-xs border-gray-300"
+                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm border-gray-300"
                 />
               </div>
               <div className="mt-1 flex rounded-md">
-                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-xs">
+                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200">
                   left:{" "}
                 </span>
                 <input
@@ -360,11 +360,11 @@ const Form = () => {
                   id="left"
                   onChange={(e) => onChange(e, setCropInput)}
                   autoComplete="left"
-                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm text-xs border-gray-300"
+                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm border-gray-300"
                 />
               </div>
               <div className="mt-1 flex">
-                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-xs">
+                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200">
                   top:{" "}
                 </span>
                 <input
@@ -373,14 +373,14 @@ const Form = () => {
                   id="top"
                   onChange={(e) => onChange(e, setCropInput)}
                   autoComplete="top"
-                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm text-xs border-gray-300"
+                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm border-gray-300"
                 />
               </div>
             </div>
           </div>
           <div>
             <div className="inline-flex items-center gap-1">
-              <label htmlFor="sharpen" className="block text-sm font-medium">
+              <label htmlFor="sharpen" className="block font-medium">
                 {" "}
                 sharpen
               </label>
@@ -415,7 +415,7 @@ const Form = () => {
           </div>
           <div>
             <div className="inline-flex items-center gap-1">
-              <label htmlFor="format" className="block text-sm font-medium">
+              <label htmlFor="format" className="block font-medium">
                 {" "}
                 format
               </label>

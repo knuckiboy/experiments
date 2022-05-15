@@ -34,7 +34,7 @@ export default function Layout({ children }: Props) {
       </Head>
       <header className="flex h-auto py-2 px-2 w-full items-center justify-between border-b">
         <div className="w-full flex flex-col lg:flex-row justify-between px-1 items-center">
-          <div className="flex items-center gap-2 ">
+          <div className="flex items-center gap-2 ml-2">
             <ImageIcon
               size={16}
               styles={"fill-violet-500 dark:fill-violet-300  scale-150"}
