@@ -6,10 +6,6 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    fontSize: {
-      "body-lg": "1rem",
-      body: ".875rem",
-    },
     extend: {},
   },
   plugins: [],

@@ -39,7 +39,7 @@ export default function Layout({ children }: Props) {
               size={16}
               styles={"fill-violet-500 dark:fill-violet-300  scale-150"}
             />
-            <h2>Image Render App</h2>
+            <h2 className="font-medium">Image Render App</h2>
           </div>
       
           <button
