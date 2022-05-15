@@ -151,23 +151,23 @@ const Form = () => {
               lastModified: new Date().getTime(),
             }
           );
-          
+
           compressed = await createImageCompression(newblob);
           const urlString = URL.createObjectURL(compressed!);
           imageUrlState?.[1](urlString);
           formSubmittedState?.[1](false);
 
-          if(createLink){
+          if (createLink) {
             const zip = new JSZip();
             const image = zip.folder("images");
             blob.data.forEach((element: string, index: number) => {
               image?.file(index + ".ico", element, { base64: true });
             });
             zip.generateAsync({ type: "blob" }).then(function (content) {
-            // Force down of the Zip file
-            saveAs(content, "archive.zip");
-          });
-        }
+              // Force down of the Zip file
+              saveAs(content, "archive.zip");
+            });
+          }
         }
       });
   };
@@ -209,10 +209,7 @@ const Form = () => {
                 formatInputState?.[1]({
                   format: e.currentTarget.name as FormatType,
                 });
-                setShowSizeFormat(
-                  e.currentTarget.name === FormatType.ICO ||
-                    e.currentTarget.name === FormatType.PNG
-                );
+                setShowSizeFormat(e.currentTarget.name === FormatType.ICO);
               }}
               className={`${index == 0 ? "rounded-l" : ""} ${
                 index == formatItems.length - 1 ? "rounded-r" : ""
