@@ -1,5 +1,5 @@
 import imageCompression from "browser-image-compression";
-import React, { ReactNode, useContext, useState } from "react";
+import React, { ReactNode, useCallback, useContext, useState } from "react";
 import {
   Dimension,
   FormatInput,
@@ -7,10 +7,15 @@ import {
   ImageInput,
   Rectangle,
   SharpenInput,
+  SizeFormat,
 } from "../model/Image.model";
 import styles from "../styles/Form.module.css";
 import { GlobalContext } from "../context/provider";
 import { ExclamationCircleIcons } from "./Icons";
+import CheckboxGroup from "./CheckboxGroup";
+import { base64toBlob, dataURItoBlob } from "../utils/image";
+import { saveAs } from "file-saver";
+import JSZip from "jszip";
 
 const Form = () => {
   const {
@@ -22,12 +27,13 @@ const Form = () => {
   const [resize, setResizeInput] = useState<InputType>();
   const [sharpenInput, setSharpenInput] = useState<InputType>({ sigma: 30 });
   const [enableSharpen, setEnableSharpen] = useState<boolean>(false);
-  // const [fileInput, setFileInput] = useState<File>();
-  // const [imageBlob, setImageBlob] = useState<string>();
   const [cropInput, setCropInput] = useState<InputType>();
-  // const [formatInput, setFormatInput] = useState<FormatInput>({
-  //   format: FormatType.JPEG,
-  // });
+  const [showSizeFormat, setShowSizeFormat] = useState<boolean>(false);
+
+  const sizeCheckboxGroup = Object.entries(SizeFormat).map((size) => ({
+    title: `${size[1]} px`,
+    onChange: () => {},
+  }));
 
   type InputType =
     | Rectangle
@@ -113,17 +119,56 @@ const Form = () => {
       method: "POST",
       body: formData,
     })
-      .then((response) => response.blob())
+      .then((response) =>
+        response.headers.get("Content-Type") === "application/octet-stream"
+          ? response.blob()
+          : response.json()
+      )
       .then(async (blob) => {
-        const newblob = new File([blob], 
-          `test/${formatInputState?.[0]?.format}`,
-          {type:`image/${formatInputState?.[0]?.format}`, lastModified:new Date().getTime()}
-        );
-        const compressed = await createImageCompression(newblob)
-        const urlString = URL.createObjectURL(compressed);
-        imageUrlState?.[1](urlString);
-        formSubmittedState?.[1](false);
-        createLink && createDownloadLink(urlString);
+        let compressed: File;
+        console.log(blob);
+        if (blob instanceof Blob) {
+          const newblob = new File(
+            [blob],
+            `test/${formatInputState?.[0]?.format}`,
+            {
+              type: `image/${formatInputState?.[0]?.format}`,
+              lastModified: new Date().getTime(),
+            }
+          );
+          compressed = await createImageCompression(newblob);
+          const urlString = URL.createObjectURL(compressed!);
+          imageUrlState?.[1](urlString);
+          formSubmittedState?.[1](false);
+          createLink && createDownloadLink(urlString);
+        } else if (Array.isArray(blob.data)) {
+          const base64Response = base64toBlob(blob.data[3], "ico");
+          const newblob = new File(
+            [base64Response],
+            `test/${formatInputState?.[0]?.format}`,
+            {
+              type: `image/${formatInputState?.[0]?.format}`,
+              lastModified: new Date().getTime(),
+            }
+          );
+          
+          compressed = await createImageCompression(newblob);
+          const urlString = URL.createObjectURL(compressed!);
+          imageUrlState?.[1](urlString);
+          formSubmittedState?.[1](false);
+
+          if(createLink){
+            const zip = new JSZip();
+            const image = zip.folder("images");
+            blob.data.forEach((element: string, index: number) => {
+              image?.file(index + ".ico", element, { base64: true });
+            });
+            zip.generateAsync({ type: "blob" }).then(function (content) {
+            // Force down of the Zip file
+            saveAs(content, "archive.zip");
+          });
+        }
+        }
       });
   };
 
@@ -160,18 +205,22 @@ const Form = () => {
               type="button"
               id={type}
               name={type}
-              onClick={(e) =>
+              onClick={(e) => {
                 formatInputState?.[1]({
                   format: e.currentTarget.name as FormatType,
-                })
-              }
+                });
+                setShowSizeFormat(
+                  e.currentTarget.name === FormatType.ICO ||
+                    e.currentTarget.name === FormatType.PNG
+                );
+              }}
               className={`${index == 0 ? "rounded-l" : ""} ${
                 index == formatItems.length - 1 ? "rounded-r" : ""
               } ${
                 formatInputState?.[0]?.format === type
                   ? "bg-violet-800"
                   : "bg-violet-400"
-              } inline-block px-4 py-2  text-white font-medium text-xs leading-tight uppercase hover:bg-violet-700 focus:bg-violet-700 focus:outline-none focus:ring-0 active:bg-violet-800 transition duration-150 ease-in-out`}
+              } inline-block grow text-white leading-loose text-xs uppercase hover:bg-violet-700 focus:bg-violet-700 focus:outline-none focus:ring-0 active:bg-violet-800 transition duration-150 ease-in-out`}
             >
               {type}
             </button>
@@ -239,7 +288,7 @@ const Form = () => {
               />
             </div>
             <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
-              <div className="mt-1 flex rounded-md">
+              <div className="mt-1 flex">
                 <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-sm">
                   width:{" "}
                 </span>
@@ -252,7 +301,7 @@ const Form = () => {
                   className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm text-sm border-gray-300"
                 />
               </div>
-              <div className="mt-1 flex rounded-md">
+              <div className="mt-1 flex">
                 <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-sm">
                   height:{" "}
                 </span>
@@ -280,7 +329,7 @@ const Form = () => {
               />
             </div>
             <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
-              <div className="mt-1 flex rounded-md">
+              <div className="mt-1 flex">
                 <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-sm">
                   width:{" "}
                 </span>
@@ -293,7 +342,7 @@ const Form = () => {
                   className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm text-sm border-gray-300"
                 />
               </div>
-              <div className="mt-1 flex rounded-md">
+              <div className="mt-1 flex">
                 <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-sm">
                   height:{" "}
                 </span>
@@ -319,7 +368,7 @@ const Form = () => {
                   className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm text-sm border-gray-300"
                 />
               </div>
-              <div className="mt-1 flex rounded-md">
+              <div className="mt-1 flex">
                 <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-sm">
                   top:{" "}
                 </span>
@@ -383,11 +432,18 @@ const Form = () => {
             </div>
             <div className="mt-1 flex items-center justify-center">
               <div
-                className="inline-flex shadow-md hover:shadow-lg focus:shadow-lg"
+                className="flex grow items-center shadow-md hover:shadow-lg focus:shadow-lg"
                 role="group"
               >
                 {buttonGroup()}
               </div>
+            </div>
+            <div
+              className={`mt-3 flex items-center justify-center ${
+                !showSizeFormat && "hidden"
+              }`}
+            >
+              <CheckboxGroup grpCheckbox={sizeCheckboxGroup} />
             </div>
           </div>
         </div>

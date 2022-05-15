@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "browser-image-compression": "^2.0.0",
+    "file-saver": "^2.0.5",
     "formidable": "^2.0.1",
+    "jszip": "^3.9.1",
     "multer": "^1.4.4",
     "next": "12.1.5",
     "png-to-ico": "^2.1.4",
@@ -20,6 +22,7 @@
     "sharp": "^0.30.4"
   },
   "devDependencies": {
+    "@types/file-saver": "^2.0.5",
     "@types/formidable": "^2.0.5",
     "@types/multer": "^1.4.7",
     "@types/node": "17.0.30",

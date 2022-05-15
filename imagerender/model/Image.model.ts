@@ -38,3 +38,5 @@ export enum FormatType {
   GIF = "gif",
   ICO = "ico",
 }
+
+export const SizeFormat = [16, 32, 48, 128];

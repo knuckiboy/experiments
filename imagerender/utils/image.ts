@@ -4,6 +4,7 @@ import {
   FormatInput,
   FormatType,
   Rectangle,
+  SizeFormat,
 } from "../model/Image.model";
 
 const resize = async (sharpItem: Sharp, size: Dimension) => {
@@ -35,7 +36,6 @@ const format = async (sharpItem: Sharp, formatType: FormatType) => {
       sharpItem.png({ quality: 60, effort: 5, compressionLevel: 4 ,force: false});
       break;
       case FormatType.ICO:
-        sharpItem.resize(128,128)
         sharpItem.png({ quality: 60, effort: 5, compressionLevel: 4 ,force: true});
         break;
     case FormatType.GIF:
@@ -52,6 +52,15 @@ const format = async (sharpItem: Sharp, formatType: FormatType) => {
 
 function dataURItoBlob(dataURI: string, ext: string) {
   var binary = Buffer.from(dataURI, "base64").toString("utf8");
+  var array = [];
+  for (var i = 0; i < binary.length; i++) {
+    array.push(binary.charCodeAt(i));
+  }
+  return new Blob([new Uint8Array(array)], { type: ext });
+}
+
+function base64toBlob(base64: string, ext: string) {
+  var binary = window.atob(base64);
   var array = [];
   for (var i = 0; i < binary.length; i++) {
     array.push(binary.charCodeAt(i));
@@ -94,4 +103,4 @@ async function parseImageProcessData(sharpItem: Sharp, fields: Object) {
   }
 }
 
-export { resize, crop, sharpen, format, dataURItoBlob, parseImageProcessData };
+export { resize, crop, sharpen, format, dataURItoBlob,base64toBlob, parseImageProcessData };

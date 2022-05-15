@@ -14,7 +14,7 @@ type ImageProps = {
 
 
 const Home: NextPage<ImageProps> = ({ renderedImageBuffer, originalImageBuffer}: ImageProps) => {
-  const { fileInputState, imageUrlState, formSubmittedState } =
+  const { fileInputState, imageUrlState, formSubmittedState, formatInputState } =
     useContext(GlobalContext);
 
   return (

@@ -11,7 +11,7 @@ import {
 import { Readable } from "stream";
 
 type Data = {
-  data: string;
+  data: string | string[];
 };
 type DataFields = {
   fields: Fields;
@@ -43,6 +43,8 @@ async function convertICO(buffer: Buffer) {
   return await pngToIco(buffer);
 }
 
+type BufferType = Buffer | Buffer[] | string[];
+
 export default async function handler(
   req: NextApiRequest & { [key: string]: any },
   res: NextApiResponse<Data>
@@ -54,13 +56,31 @@ export default async function handler(
         if (!Array.isArray(files.file)) {
           let sharpItem = sharp(parseFileToStream(files.file));
           await parseImageProcessData(sharpItem, fields);
-          let buffer = await sharpItem.toBuffer();
           const object = convertStringDataToObject(fields["format"] as string);
+          let buffer: BufferType;
           if (object["format"] === FormatType.ICO) {
-            buffer = await convertICO(buffer);
+            // buffer = await convertICO(buffer);
+            buffer = [];
+            await Promise.allSettled([
+              await convertICO(await sharpItem.resize(16, 16).toBuffer()),
+              await convertICO(await sharpItem.resize(32, 32).toBuffer()),
+              await convertICO(await sharpItem.resize(48, 48).toBuffer()),
+              await convertICO(await sharpItem.resize(128, 128).toBuffer()),
+            ]).then((result) => {
+              result.forEach(
+                (item) =>
+                  item.status === "fulfilled" &&
+                  (<string[]>buffer).push(item.value.toString("base64"))
+              );
+              res.setHeader("Content-Type", "application/json");
+              return res.status(200).json({ data: buffer as string[] });
+            });
+          } else {
+            buffer = await sharpItem.toBuffer();
+            res.setHeader("Content-Type", "application/octet-stream");
+            const stream = Readable.from(buffer);
+            stream.pipe(res);
           }
-          const stream = Readable.from(buffer);
-          stream.pipe(res);
         } else {
           res.status(400).json({ data: "multi file not supported" });
         }

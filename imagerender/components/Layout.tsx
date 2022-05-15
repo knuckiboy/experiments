@@ -21,7 +21,7 @@ export default function Layout({ children }: Props) {
     <div className="bg-white dark:bg-slate-800 flex min-h-screen flex-col items-center justify-center text-slate-500 dark:text-slate-400">
       <Head>
         <title>Image Render App</title>
-        <link rel="icon" href="/portfolio.ico" />
+        <link rel="shortcut icon" href="/portfolio.ico" />
       </Head>
       <header className="flex h-12 w-full items-center justify-between border-b">
         <div className="container flex justify-center lg:justify-between mx-auto px-1 items-center">
