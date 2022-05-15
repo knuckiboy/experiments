@@ -126,7 +126,6 @@ const Form = () => {
       )
       .then(async (blob) => {
         let compressed: File;
-        console.log(blob);
         if (blob instanceof Blob) {
           const newblob = new File(
             [blob],
@@ -181,7 +180,6 @@ const Form = () => {
   const createDownloadLink = (urlString: string) => {
     let a = document.createElement("a");
     if (urlString) {
-      console.log(urlString);
       a.href = urlString;
     }
     a.setAttribute(
@@ -286,7 +284,7 @@ const Form = () => {
             </div>
             <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
               <div className="mt-1 flex">
-                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-sm">
+                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-xs">
                   width:{" "}
                 </span>
                 <input
@@ -295,11 +293,11 @@ const Form = () => {
                   id="width"
                   onChange={(e) => onChange(e, setResizeInput)}
                   autoComplete="width"
-                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm text-sm border-gray-300"
+                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm text-xs border-gray-300"
                 />
               </div>
               <div className="mt-1 flex">
-                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-sm">
+                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-xs">
                   height:{" "}
                 </span>
                 <input
@@ -308,7 +306,7 @@ const Form = () => {
                   id="height"
                   onChange={(e) => onChange(e, setResizeInput)}
                   autoComplete="height"
-                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm text-sm"
+                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm text-xs"
                 />
               </div>
             </div>
@@ -327,7 +325,7 @@ const Form = () => {
             </div>
             <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
               <div className="mt-1 flex">
-                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-sm">
+                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-xs">
                   width:{" "}
                 </span>
                 <input
@@ -336,11 +334,11 @@ const Form = () => {
                   id="width"
                   onChange={(e) => onChange(e, setCropInput)}
                   autoComplete="width"
-                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm text-sm border-gray-300"
+                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm text-xs border-gray-300"
                 />
               </div>
               <div className="mt-1 flex">
-                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-sm">
+                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-xs">
                   height:{" "}
                 </span>
                 <input
@@ -349,11 +347,11 @@ const Form = () => {
                   id="height"
                   onChange={(e) => onChange(e, setCropInput)}
                   autoComplete="height"
-                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm text-sm border-gray-300"
+                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm text-xs border-gray-300"
                 />
               </div>
               <div className="mt-1 flex rounded-md">
-                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50  dark:bg-gray-200 text-sm">
+                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-xs">
                   left:{" "}
                 </span>
                 <input
@@ -362,11 +360,11 @@ const Form = () => {
                   id="left"
                   onChange={(e) => onChange(e, setCropInput)}
                   autoComplete="left"
-                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm text-sm border-gray-300"
+                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm text-xs border-gray-300"
                 />
               </div>
               <div className="mt-1 flex">
-                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-sm">
+                <span className="inline-flex items-center px-1 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 dark:bg-gray-200 text-xs">
                   top:{" "}
                 </span>
                 <input
@@ -375,7 +373,7 @@ const Form = () => {
                   id="top"
                   onChange={(e) => onChange(e, setCropInput)}
                   autoComplete="top"
-                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm text-sm border-gray-300"
+                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm text-xs border-gray-300"
                 />
               </div>
             </div>

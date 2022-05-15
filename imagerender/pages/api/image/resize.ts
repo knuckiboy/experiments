@@ -85,7 +85,6 @@ export default async function handler(
           res.status(400).json({ data: "multi file not supported" });
         }
       } catch (e) {
-        console.log(e);
         res.status(500).json({ data: "something gone wrong" });
       }
       break;

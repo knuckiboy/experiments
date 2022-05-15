@@ -85,19 +85,15 @@ async function parseImageProcessData(sharpItem: Sharp, fields: Object) {
   for (let [key, value] of Object.entries(fields)) {
     const object = convertStringDataToObject(value);
     if (key === "sharpen") {
-      console.log("items", object.sigma);
       await sharpen(sharpItem, object);
     }
     if (key === "format") {
-      console.log("format", object);
       await format(sharpItem, (object as FormatInput).format);
     }
     if (key === "resize") {
-      console.log("resize", object);
       await resize(sharpItem, object);
     }
     if (key === "crop") {
-      console.log("crop", object);
       await crop(sharpItem, object);
     }
   }
