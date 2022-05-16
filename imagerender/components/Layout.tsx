@@ -44,7 +44,7 @@ export default function Layout({ children }: Props) {
       
           <button
             id="menuBtn"
-            className="hamburger lg:hidden flex items-center focus:outline-none"
+            className="hamburger rounded lg:hidden flex items-center focus:outline-none"
             type="button"
             onClick={menuToggle}
           >
@@ -52,7 +52,7 @@ export default function Layout({ children }: Props) {
               xmlns="http://www.w3.org/2000/svg"
               width="16"
               height="16"
-              className="grow toggle"
+              className="grow"
               viewBox="0 0 16 16"
             >
               <path

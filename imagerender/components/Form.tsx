@@ -293,7 +293,7 @@ const Form = () => {
                   id="width"
                   onChange={(e) => onChange(e, setResizeInput)}
                   autoComplete="width"
-                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-smborder-gray-300"
+                  className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block rounded-r-md border border-l-0 w-full shadow-sm border-gray-300"
                 />
               </div>
               <div className="mt-1 flex">
