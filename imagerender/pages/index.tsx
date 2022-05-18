@@ -14,7 +14,7 @@ type ImageProps = {
 
 
 const Home: NextPage<ImageProps> = ({ renderedImageBuffer, originalImageBuffer}: ImageProps) => {
-  const { fileInputState, imageUrlState, formSubmittedState, formatInputState } =
+  const { fileInputState, imageUrlState, formSubmittedState } =
     useContext(GlobalContext);
 
   return (
@@ -54,7 +54,7 @@ const Home: NextPage<ImageProps> = ({ renderedImageBuffer, originalImageBuffer}:
               ) : (
                 <div className="w-full flex items-center flex-col">
                   <div className={"w-full lg:w-[25vw] h-[70vh] relative"}>
-                    {imageUrlState?.[0] ? (
+                    {!formSubmittedState?.[0]&& imageUrlState?.[0] ? (
                       <Image
                         src={imageUrlState?.[0]}
                         alt="renderedPic"

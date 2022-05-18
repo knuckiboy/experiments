@@ -1,5 +1,5 @@
 import imageCompression from "browser-image-compression";
-import React, { ReactNode, useCallback, useContext, useState } from "react";
+import React, { ReactNode, useContext, useState } from "react";
 import {
   Dimension,
   FormatInput,
@@ -8,6 +8,7 @@ import {
   Rectangle,
   SharpenInput,
   SizeFormat,
+  ToggleInput,
 } from "../model/Image.model";
 import styles from "../styles/Form.module.css";
 import { GlobalContext } from "../context/provider";
@@ -27,6 +28,8 @@ const Form = () => {
   const [resize, setResizeInput] = useState<InputType>();
   const [sharpenInput, setSharpenInput] = useState<InputType>({ sigma: 30 });
   const [enableSharpen, setEnableSharpen] = useState<boolean>(false);
+  const [grayscale, setGrayScale] = useState<boolean>(false);
+  const [rotate, setRotate] = useState<boolean>(false);
   const [cropInput, setCropInput] = useState<InputType>();
   const [showSizeFormat, setShowSizeFormat] = useState<boolean>(false);
 
@@ -40,6 +43,7 @@ const Form = () => {
     | SharpenInput
     | ImageInput
     | FormatInput
+    | ToggleInput
     | Dimension
     | undefined;
 
@@ -87,6 +91,12 @@ const Form = () => {
     }
     if (cropInput) {
       formData.append("crop", convertToString(cropInput));
+    }
+    if(grayscale){
+      formData.append("grayscale", convertToString({toggle: grayscale}));
+    }
+    if(rotate){
+      formData.append("rotate", convertToString({toggle: rotate}));
     }
     if (formatInputState?.[0]) {
       formData.append("format", convertToString(formatInputState?.[0]));
@@ -191,6 +201,11 @@ const Form = () => {
     a.click();
   };
 
+  const opsCheckboxGrp = [
+    { title: "greyscale",value:grayscale, onChange: () => setGrayScale(prev=> !prev) },
+    { title: "rotate", value:rotate,onChange: () => setRotate(prev=> !prev) },
+  ];
+
   const formatItems = Object.values(FormatType);
 
   const buttonGroup = (): ReactNode => {
@@ -203,6 +218,7 @@ const Form = () => {
               type="button"
               id={type}
               name={type}
+              disabled={type == FormatType.HEIC}
               onClick={(e) => {
                 formatInputState?.[1]({
                   format: e.currentTarget.name as FormatType,
@@ -215,7 +231,7 @@ const Form = () => {
                 formatInputState?.[0]?.format === type
                   ? "bg-violet-800"
                   : "bg-violet-400"
-              } inline-block grow text-white leading-loose text-xs uppercase hover:bg-violet-700 focus:bg-violet-700 focus:outline-none focus:ring-0 active:bg-violet-800 transition duration-150 ease-in-out`}
+              } inline-block grow text-white leading-loose text-xs uppercase hover:bg-violet-700 focus:bg-violet-700 focus:outline-none focus:ring-0 active:bg-violet-800 transition duration-150 ease-in-out disabled:bg-violet-200`}
             >
               {type}
             </button>
@@ -228,7 +244,7 @@ const Form = () => {
   return (
     <form onSubmit={onSubmit}>
       <div className="bg-white dark:bg-slate-600 shadow sm:rounded-md sm:overflow-hidden text-slate-500 dark:text-violet-400">
-        <div className="px-2 py-5 space-y-6 sm:p-6 m-3">
+        <div className="px-2 py-3 space-y-4 sm:p-6 mx-3">
           <div>
             <label className="block font-medium"> Choose photo </label>
             <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
@@ -380,15 +396,33 @@ const Form = () => {
           </div>
           <div>
             <div className="inline-flex items-center gap-1">
-              <label htmlFor="sharpen" className="block font-medium">
+              <label htmlFor="processing" className="block font-medium">
                 {" "}
-                sharpen
+                processing
               </label>
               <ExclamationCircleIcons
-                size={16}
-                styles={"fill-gray-500 dark:fill-gray-300 scale-75"}
-                tooltipwithtext="select checkbox to toggle image sharpening"
-              />
+                  size={16}
+                  styles={"fill-gray-500 dark:fill-gray-300 scale-75"}
+                  tooltipwithtext="image processing operations"
+                />
+              </div>
+              <div className="mt-1 flex items-center justify-center">
+                <CheckboxGroup grpCheckbox={opsCheckboxGrp} />
+              </div>
+          </div>
+          <div>
+            <div>
+              <div className="inline-flex items-center gap-1">
+                <label htmlFor="sharpen" className="block font-medium">
+                  {" "}
+                  sharpen
+                </label>
+                <ExclamationCircleIcons
+                  size={16}
+                  styles={"fill-gray-500 dark:fill-gray-300 scale-75"}
+                  tooltipwithtext="select checkbox to toggle image sharpening"
+                />
+              </div>
               <input
                 type="checkbox"
                 className="border-gray-300 rounded ml-1 h-3 w-3"
@@ -400,7 +434,7 @@ const Form = () => {
               <input
                 type="range"
                 className={[
-                  "w-full h-2 bg-violet-100 rounded-lg appearance-none",
+                  "range w-full h-2 bg-violet-200 rounded-lg appearance-none",
                   styles["slider-thumb"],
                 ].join(" ")}
                 id="sigma"
@@ -438,7 +472,7 @@ const Form = () => {
                 !showSizeFormat && "hidden"
               }`}
             >
-              <CheckboxGroup grpCheckbox={sizeCheckboxGroup} />
+              <CheckboxGroup grpCheckbox={sizeCheckboxGroup} disabled={true} />
             </div>
           </div>
         </div>

@@ -18,6 +18,12 @@ export type Rectangle = Dimension & {
 export type SharpenInput = {
   sigma?: number;
 };
+
+export type ToggleInput = {
+  toggle?: boolean;
+};
+
+
 export type DetailedSharpenInput = {
   sigma?: number;
   m1?: number;
@@ -37,6 +43,7 @@ export enum FormatType {
   JPEG = "jpeg",
   GIF = "gif",
   ICO = "ico",
+  HEIC = "heic",
 }
 
 export const SizeFormat = [16, 32, 48, 128];

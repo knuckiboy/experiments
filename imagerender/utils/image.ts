@@ -14,6 +14,14 @@ const resize = async (sharpItem: Sharp, size: Dimension) => {
     sharpItem.resize(size.width, size.height);
 };
 
+const grayscale = async (sharpItem: Sharp) => {
+  sharpItem.grayscale();
+};
+
+const rotate = async (sharpItem: Sharp) => {
+  sharpItem.rotate(90);
+};
+
 const crop = async (sharpItem: Sharp, rectangle: Rectangle) => {
   sharpItem.extract({
     left: rectangle.left!,
@@ -33,19 +41,34 @@ const sharpen = async (sharpItem: Sharp, sigma: number) => {
 const format = async (sharpItem: Sharp, formatType: FormatType) => {
   switch (formatType) {
     case FormatType.PNG:
-      sharpItem.png({ quality: 60, effort: 5, compressionLevel: 4 ,force: false});
+      sharpItem.png({
+        quality: 60,
+        effort: 5,
+        compressionLevel: 4,
+        force: false,
+      });
       break;
-      case FormatType.ICO:
-        sharpItem.png({ quality: 60, effort: 5, compressionLevel: 4 ,force: true});
-        break;
+    case FormatType.ICO:
+      sharpItem.png({
+        quality: 60,
+        effort: 5,
+        compressionLevel: 4,
+        force: true,
+      });
+      break;
     case FormatType.GIF:
-      sharpItem.gif({effort: 5});
+      sharpItem.gif({ effort: 5 });
       break;
     case FormatType.WEBP:
-      sharpItem.webp({lossless:true, quality: 60, alphaQuality: 80, force: false});
+      sharpItem.webp({
+        lossless: true,
+        quality: 60,
+        alphaQuality: 80,
+        force: false,
+      });
       break;
     case FormatType.JPEG:
-      sharpItem.jpeg({ quality: 60, progressive:true, mozjpeg:true});
+      sharpItem.jpeg({ quality: 60, progressive: true, mozjpeg: true });
       break;
   }
 };
@@ -96,7 +119,23 @@ async function parseImageProcessData(sharpItem: Sharp, fields: Object) {
     if (key === "crop") {
       await crop(sharpItem, object);
     }
+    if (key === "grayscale") {
+      await grayscale(sharpItem);
+    }
+    if (key === "rotate") {
+      await rotate(sharpItem);
+    }
   }
 }
 
-export { resize, crop, sharpen, format, dataURItoBlob,base64toBlob, parseImageProcessData };
+export {
+  resize,
+  crop,
+  sharpen,
+  format,
+  dataURItoBlob,
+  base64toBlob,
+  parseImageProcessData,
+  grayscale,
+  rotate,
+};

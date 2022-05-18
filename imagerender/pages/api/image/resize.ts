@@ -3,7 +3,7 @@ import fs from "fs";
 import pngToIco from "png-to-ico";
 import { IncomingForm, Fields, Files, File } from "formidable";
 import sharp from "sharp";
-import { FormatInput, FormatType } from "../../../model/Image.model";
+import { FormatType } from "../../../model/Image.model";
 import {
   convertStringDataToObject,
   parseImageProcessData,
