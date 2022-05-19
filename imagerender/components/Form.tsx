@@ -14,7 +14,7 @@ import styles from "../styles/Form.module.css";
 import { GlobalContext } from "../context/provider";
 import { ExclamationCircleIcons } from "./Icons";
 import CheckboxGroup from "./CheckboxGroup";
-import { base64toBlob, dataURItoBlob } from "../utils/image";
+import { base64toBlob } from "../utils/image";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
 
