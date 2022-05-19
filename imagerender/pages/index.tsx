@@ -6,14 +6,14 @@ import Form from "../components/Form";
 import { LoadingIcon } from "../components/Icons";
 import { GlobalContext } from "../context/provider";
 import { resize } from "../utils/image";
+import image from "../public/image/default-img.jpg"
 
 type ImageProps = {
   renderedImageBuffer: string;
-  originalImageBuffer: string;
 };
 
 
-const Home: NextPage<ImageProps> = ({ renderedImageBuffer, originalImageBuffer}: ImageProps) => {
+const Home: NextPage<ImageProps> = ({ renderedImageBuffer}: ImageProps) => {
   const { fileInputState, imageUrlState, formSubmittedState } =
     useContext(GlobalContext);
 
@@ -29,7 +29,7 @@ const Home: NextPage<ImageProps> = ({ renderedImageBuffer, originalImageBuffer}:
                   src={
                     fileInputState?.[0]
                       ? URL.createObjectURL(fileInputState?.[0])
-                      : "data:image/png;base64, " + originalImageBuffer
+                      : image
                   }
                   layout="fill"
                   objectFit="contain"
@@ -89,15 +89,12 @@ const Home: NextPage<ImageProps> = ({ renderedImageBuffer, originalImageBuffer}:
 };
 
 export async function getStaticProps() {
-  const originalSharpItem = sharp("public/image/default-img.jpg");
   const sharpItem = sharp("public/image/default-img.jpg");
   resize(sharpItem, { width: 300, height: 300 });
   const info = await sharpItem.toBuffer();
-  const info2 = await originalSharpItem.toBuffer();
   return {
     props: {
       renderedImageBuffer: info.toString("base64"),
-      originalImageBuffer: info2.toString("base64"),
     },
   };
 }
