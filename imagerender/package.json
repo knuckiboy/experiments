@@ -16,10 +16,11 @@
     "jszip": "^3.9.1",
     "multer": "^1.4.4",
     "next": "12.1.5",
+    "next-pwa": "^5.5.2",
     "png-to-ico": "^2.1.4",
     "react": "18.1.0",
     "react-dom": "18.1.0",
-    "sharp": "^0.30.4"
+    "sharp": "^0.30.6"
   },
   "devDependencies": {
     "@types/file-saver": "^2.0.5",
